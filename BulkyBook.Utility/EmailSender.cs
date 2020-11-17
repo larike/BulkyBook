@@ -14,10 +14,13 @@ namespace BulkyBook.Utility
         // tällaisen luokan ja emailOptions.cs kanssa voidaan ladata application.json:ista tietoa
         // kunhan startupiin laittaa myös servicen
         private readonly EmailOptions emailOptions;
+
         public EmailSender(IOptions<EmailOptions> options)
         {
             emailOptions = options.Value;
         }
+
+
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
             return Execute(emailOptions.SendGridKey, subject, htmlMessage, email);
@@ -26,7 +29,7 @@ namespace BulkyBook.Utility
         {
             var client = new SendGridClient(sendGridKey);
             var from = new EmailAddress("admin@bulky.com", "Bulky Books");
-            var to = new EmailAddress(email,"End User");
+            var to = new EmailAddress(email, "End User");
             var msg = MailHelper.CreateSingleEmail(from, to, subject, "", message);
             return client.SendEmailAsync(msg);
         }
