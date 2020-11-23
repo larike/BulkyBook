@@ -43,9 +43,9 @@ function Delete(url) {
             $.ajax({
                 type: "DELETE",
                 url: url,
-                //beforeSend: function (request) {
-                //    request.setRequestHeader("RequestVerificationToken", $("[name='__RequestVerificationToken']").val());
-                //},
+                beforeSend: function (request) {
+                    request.setRequestHeader("RequestVerificationToken", $("[name='__RequestVerificationToken']").val());
+                },
                 success: function (data) {
                     if (data.success) {
                         console.log("on succ");

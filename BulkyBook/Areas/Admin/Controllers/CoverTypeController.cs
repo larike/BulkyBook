@@ -82,7 +82,7 @@ namespace BulkyBook.Areas.Admin.Controllers
             return Json(new { data = allObj });
         }
         [HttpDelete]
-       // [ValidateAntiForgeryToken] // maybe works after async?
+        [ValidateAntiForgeryToken] // maybe works after async?
         public IActionResult Delete(int id)
         {
             var parameter = new DynamicParameters();
