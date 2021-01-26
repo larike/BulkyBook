@@ -6,7 +6,13 @@
 }
 
 <div id="logreg-forms">
-
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        Facebook and Google logins are disabled in demo-version. Also email verification is disabled. 
+        Please log-in with given credientials.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
         <h1 class="h3 mb-3 font-weight-normal text-primary" style="text-align:center;">Sign In</h1>
         <div class="social-login pb-0 mb-0">
@@ -16,7 +22,7 @@
                 {
                     <button type="submit" class="btn btn-block facebook-btn form-control"
                             name="provider" value="@provider.Name"
-                            title="Log in using your @provider.DisplayName account">
+                            title="Log in using your @provider.DisplayName account" disabled>
                         <i class="fab fa-facebook-square"></i> @provider.DisplayName
                     </button>
                 }
@@ -26,7 +32,7 @@
                     {
                         <button type="submit" class="btn btn-block google-btn form-control"
                                 name="provider" value="@provider.Name"
-                                title="Log in using your @provider.DisplayName account">
+                                title="Log in using your @provider.DisplayName account" disabled>
                             <i class="fab fa-google"></i> @provider.DisplayName
                         </button>
                     }
@@ -34,7 +40,7 @@
                     {
                         <button type="submit" class="btn btn-primary" name="provider"
                                 value="@provider.Name"
-                                title="Log in using your @provider.DisplayName account">
+                                title="Log in using your @provider.DisplayName account" disabled>
                             @provider.DisplayName
                         </button>
                     }
@@ -55,15 +61,15 @@
         <input asp-for="Input.Password" placeholder="Password..." type="password" class="form-control" />
         <button type="submit" class="btn btn-success btn-block"><i class="fas fa-sign-in-alt"></i> Sign in</button>
 
-        <a id="forgot-password" asp-page="./ForgotPassword" class="pb-2 text-info">Forgot your password?</a>
+        <a id="forgot-password" asp-page="./ForgotPassword" class="pb-2 text-info" style="pointer-events:none">Forgot your password?</a>
 
         <button type="submit" asp-page-handler="SendVerificationEmail" class="btn-link text-info"
-                style="padding:0px;margin:0px;border:0px">
+                style="padding:0px;margin:0px;border:0px" disabled>
             Resend email confirmation
         </button>
         <div asp-validation-summary="All" class="text-danger"></div>
         <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl"
-           class="btn btn-primary text-white"><i class="fas fa-user-plus"></i> Register as a new user</a>
+           class="btn btn-primary text-white"><i class="fas fa-user-plus" style="pointer-events:none"></i> Register as a new user</a>
     </form>
 
 </div>

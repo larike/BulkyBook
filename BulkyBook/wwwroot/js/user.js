@@ -1,53 +1,108 @@
-﻿var dataTable;
-
-$(document).ready(function () {
-    loadDataTable();
+﻿$(document).ready(function () {
+    var table = $('.table').DataTable({
+        stateSave: true
+    });
 });
 
 
-function loadDataTable() {
-    dataTable = $('#tblData').DataTable({
-        "ajax": {
-            "url": "/Admin/User/GetAll"
-        },
-        "columns": [
-            { "data": "name", "width": "15%" },
-            { "data": "email", "width": "15%" },
-            { "data": "phoneNumber", "width": "15%" },
-            { "data": "company.name", "width": "15%" },
-            { "data": "role", "width": "15%" } ,
-            {
-                "data": {
-                    id: "id", lockoutEnd: "lockoutEnd"
-                },
-                "render": function (data) {
-                    var today = new Date().getTime();
-                    var lockout = new Date(data.lockoutEnd).getTime();
-                    if (lockout > today) {
-                        //user is currently locked
-                        return `
-                            <div class="text-center">
-                                <a onclick=LockUnlock('${data.id}') class="btn btn-danger text-white" style="cursor:pointer; width:100px;">
-                                    <i class="fas fa-lock-open"></i>  Unlock
-                                </a>
-                            </div>
-                           `;
-                    }
-                    else {
-                        return `
-                            <div class="text-center">
-                                <a onclick=LockUnlock('${data.id}') class="btn btn-success text-white" style="cursor:pointer; width:100px;">
-                                    <i class="fas fa-lock"></i>  Lock
-                                </a>
-                            </div>
-                           `;
-                    }
+//var dataTable;
 
-                }, "width": "25%"
-            }
-        ]
-    });
-}
+//$(document).ready(function () {
+//    loadDataTable();
+//});
+
+
+//function loadDataTable() {
+//    dataTable = $('#tblData').DataTable({
+//        "ajax": {
+//            "url": "/Admin/User/GetAll"
+//        },
+//        "columns": [
+//            { "data": "name", "width": "15%" },
+//            { "data": "email", "width": "15%" },
+//            { "data": "phoneNumber", "width": "15%" },
+//            { "data": "company.name", "width": "15%" },
+//            { "data": "role", "width": "15%" } ,
+//            {
+//                "data": {
+//                    id: "id", lockoutEnd: "lockoutEnd"
+//                },
+//                "render": function (data) {
+//                    var today = new Date().getTime();
+//                    var lockout = new Date(data.lockoutEnd).getTime();    
+//                    if (data.role == "Admin") {
+//                        return ` <div class="text-center">
+//                                <p>TESTI</p>
+//                                </div>
+//                                `;
+//                    }
+//                    else {
+//                        return `<div class="text-center"><p>TOINENTESTI</p></div>`;
+                    //}
+                    //if (lockout > today) {
+                    //    //user is currently locked, disabled in demoversion
+                    //    // <a onclick=LockUnlock('${data.id}') class="btn btn-danger text-white" style="cursor:pointer; width:100px;">
+                    //    if (data.role == "Admin") {
+                    //        return `
+                    //        <div class="text-center">
+                    //            //<a onclick=triggerAlarm() class="btn btn-danger text-white" style="cursor:pointer; width:70px;">
+                    //            //    <i class="fas fa-lock-open"></i>  Unlock
+                    //            //</a>
+                    //            <a onclick=Delete("/Admin/User/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer">
+                    //                <i class="fas fa-trash-alt"></i> 
+                    //            </a>
+                    //        </div>
+                    //       `;
+                    //    }
+                    //    else {
+                    //        return `
+                    //        <div class="text-center">
+                    //            <a onclick=triggerAlarm() class="btn btn-danger text-white" style="cursor:pointer; width:100px;">
+                    //                <i class="fas fa-lock-open"></i>  Unlock
+                    //            </a>
+                    //        </div>
+                    //       `;
+                    //    }
+                    //}
+                    //else {
+                    //    if (data.role == "Admin") {
+                    //        return `
+                    //        <div class="text-center">
+                    //            //<a onclick=triggerAlarm() class="btn btn-danger text-white" style="cursor:pointer; width:70px;">
+                    //            //    <i class="fas fa-lock-open"></i>  Unlock
+                    //            //</a>
+                    //            <a onclick=Delete("/Admin/User/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer">
+                    //                <i class="fas fa-trash-alt"></i> 
+                    //            </a>
+                    //        </div>
+                    //       `;
+                    //    }
+                    //    else {
+                    //        return `
+                    //        <div class="text-center">
+                    //            <a onclick=triggerAlarm() class="btn btn-danger text-white" style="cursor:pointer; width:100px;">
+                    //                <i class="fas fa-lock-open"></i>  Unlock
+                    //            </a>
+                    //        </div>
+                    //       `;
+                    //    }                    
+                    //}
+
+                    //else {
+                    //    return `
+                    //        <div class="text-center">
+                    //            <a onclick=triggerAlarm() class="btn btn-success text-white" style="cursor:pointer; width:100px;">
+                    //                <i class="fas fa-lock"></i>  Lock
+                    //            </a>
+                    //        </div>
+                    //       `;
+                    //}
+
+//                }, "width": "25%"
+//            }
+//        ]
+//    });
+//}
 
 function LockUnlock(id) {
 

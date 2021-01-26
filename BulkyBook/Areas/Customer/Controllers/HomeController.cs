@@ -40,6 +40,14 @@ namespace BulkyBook.Areas.Customer.Controllers
                     .ToList().Count();
 
                 HttpContext.Session.SetInt32(SD.ssShoppingCart, count);
+                var tempUsers = _unitOfWork.ApplicationUser.GetAll();
+                var rCount = tempUsers.Count();
+                HttpContext.Session.SetInt32("regCount", rCount);
+                var tempRegCountStart = HttpContext.Session.GetInt32("regCountStart");
+                if (tempRegCountStart == null)
+                {
+                    HttpContext.Session.SetInt32("regCountStart", rCount);
+                }
             }
             return View(productList);
         }

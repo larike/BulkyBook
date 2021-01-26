@@ -12,8 +12,9 @@ using BulkyBook.Utility;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
+//using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -28,7 +29,7 @@ namespace BulkyBook.Areas.Identity.Pages.Account
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
+     //   private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _hostEnvironment;
@@ -37,7 +38,7 @@ namespace BulkyBook.Areas.Identity.Pages.Account
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender,
+     //       IEmailSender emailSender,
             RoleManager<IdentityRole> roleManager,
             IUnitOfWork unitOfWork,
             IWebHostEnvironment hostEnvironment)
@@ -46,7 +47,7 @@ namespace BulkyBook.Areas.Identity.Pages.Account
             _hostEnvironment = hostEnvironment;
             _signInManager = signInManager;
             _logger = logger;
-            _emailSender = emailSender;
+      //      _emailSender = emailSender;
             _roleManager = roleManager;
             _unitOfWork = unitOfWork;
         }
@@ -142,7 +143,9 @@ namespace BulkyBook.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
+                    var users = _unitOfWork.ApplicationUser.GetAll();
+                    int userCount = users.Count();
+                    HttpContext.Session.SetInt32("regCount", userCount++);
 
                     if (user.Role == null)
                     {
@@ -157,25 +160,25 @@ namespace BulkyBook.Areas.Identity.Pages.Account
                         await _userManager.AddToRoleAsync(user, user.Role);
                     }
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = user.Id, code = code },
-                        protocol: Request.Scheme);
+                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    //var callbackUrl = Url.Page(
+                    //    "/Account/ConfirmEmail",
+                    //    pageHandler: null,
+                    //    values: new { area = "Identity", userId = user.Id, code = code },
+                    //    protocol: Request.Scheme);
 
 
-                    var PathToFile = _hostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
-                        + "Templates" + Path.DirectorySeparatorChar.ToString() + "EmailTemplates"
-                        + Path.DirectorySeparatorChar.ToString() + "Confirm_Account_Registration.html";
+                    //var PathToFile = _hostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
+                    //    + "Templates" + Path.DirectorySeparatorChar.ToString() + "EmailTemplates"
+                    //    + Path.DirectorySeparatorChar.ToString() + "Confirm_Account_Registration.html";
 
-                    var subject = "Confirm Account Registration";
-                    string HtmlBody = "";
-                    using (StreamReader streamReader = System.IO.File.OpenText(PathToFile))
-                    {
-                        HtmlBody = streamReader.ReadToEnd();
-                    }
+                    //var subject = "Confirm Account Registration";
+                    //string HtmlBody = "";
+                    //using (StreamReader streamReader = System.IO.File.OpenText(PathToFile))
+                    //{
+                    //    HtmlBody = streamReader.ReadToEnd();
+                    //}
 
                     //{0} : Subject  
                     //{1} : DateTime  
@@ -184,19 +187,20 @@ namespace BulkyBook.Areas.Identity.Pages.Account
                     //{4} : Message  
                     //{5} : callbackURL  
 
-                    string Message = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
+                    //string Message = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";
 
-                    string messageBody = string.Format(HtmlBody,
-                        subject,
-                        String.Format("{0:dddd, d MMMM yyyy}", DateTime.Now),
-                        user.Name,
-                        user.Email,
-                        Message,
-                        callbackUrl
-                        );
+                    //string messageBody = string.Format(HtmlBody,
+                    //    subject,
+                    //    String.Format("{0:dddd, d MMMM yyyy}", DateTime.Now),
+                    //    user.Name,
+                    //    user.Email,
+                    //    Message,
+                    //    callbackUrl
+                    //    );
 
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email", messageBody);
+                    //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email", messageBody);
+
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email });

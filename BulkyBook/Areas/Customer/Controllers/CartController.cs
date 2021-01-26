@@ -11,14 +11,13 @@ using BulkyBook.Models.ViewModels;
 using BulkyBook.Utility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
+//using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Stripe;
-using Stripe;
-using Twilio;
-using Twilio.Rest.Api.V2010.Account;
+//using Twilio;
+//using Twilio.Rest.Api.V2010.Account;
 
 namespace BulkyBook.Areas.Customer.Controllers
 {
@@ -26,22 +25,22 @@ namespace BulkyBook.Areas.Customer.Controllers
     public class CartController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IEmailSender _emailSender;
+    //    private readonly IEmailSender _emailSender;
 
-        private TwilioSettings _twilioOptions { get; set; }
+       // private TwilioSettings _twilioOptions { get; set; }
         private readonly UserManager<IdentityUser> _userManager;
 
         [BindProperty] //with binding we can have VM model in all actions without passing it
         public ShoppingCartVM ShoppingCartVM { get; set; }
 
-        public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender,
+        public CartController(IUnitOfWork unitOfWork, //IEmailSender emailSender,
             UserManager<IdentityUser> userManager, 
             IOptions<TwilioSettings> twilionOptions)
         {
             _unitOfWork = unitOfWork;
-            _emailSender = emailSender;
+          //  _emailSender = emailSender;
             _userManager = userManager;
-            _twilioOptions = twilionOptions.Value;
+          //  _twilioOptions = twilionOptions.Value;
         }
 
         public IActionResult Index()
@@ -75,34 +74,34 @@ namespace BulkyBook.Areas.Customer.Controllers
             return View(ShoppingCartVM);
         }
 
-        [HttpPost]
-        [ActionName("Index")]
-        public async Task<IActionResult> IndexPOST()
-        {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            var user = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == claim.Value);
+        //[HttpPost]
+        //[ActionName("Index")]
+        //public async Task<IActionResult> IndexPOST()
+        //{
+        //    var claimsIdentity = (ClaimsIdentity)User.Identity;
+        //    var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+        //    var user = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == claim.Value);
 
-            if (user == null)
-            {
-                ModelState.AddModelError(string.Empty, "Verification email is empty!");
-            }
+        //    //if (user == null)
+        //    //{
+        //    //    ModelState.AddModelError(string.Empty, "Verification email is empty!");
+        //    //}
 
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var callbackUrl = Url.Page(
-                "/Account/ConfirmEmail",
-                pageHandler: null,
-                values: new { area = "Identity", userId = user.Id, code = code },
-                protocol: Request.Scheme);
+        //    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        //    //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        //    //var callbackUrl = Url.Page(
+        //    //    "/Account/ConfirmEmail",
+        //    //    pageHandler: null,
+        //    //    values: new { area = "Identity", userId = user.Id, code = code },
+        //    //    protocol: Request.Scheme);
 
-            await _emailSender.SendEmailAsync(user.Email, "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+        //    //await _emailSender.SendEmailAsync(user.Email, "Confirm your email",
+        //    //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-            ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
-            return RedirectToAction("Index");
+        //    //ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
+        //    return RedirectToAction("Index");
 
-        }
+        //}
 
 
         public IActionResult Plus(int cartId)
@@ -264,27 +263,26 @@ namespace BulkyBook.Areas.Customer.Controllers
             }
 
             _unitOfWork.Save();
-
             return RedirectToAction("OrderConfirmation", "Cart", new { id = ShoppingCartVM.OrderHeader.Id });
 
         }
 
         public IActionResult OrderConfirmation(int id)
         {
-            OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
-            TwilioClient.Init(_twilioOptions.AccountSid, _twilioOptions.AuthToken);
-            try
-            {
-                var message = MessageResource.Create(
-                    body: "Order Placed on Bulky Book. Your Order ID:" + id,
-                    from: new Twilio.Types.PhoneNumber(_twilioOptions.PhoneNumber),
-                    to: new Twilio.Types.PhoneNumber(orderHeader.PhoneNumber)
-                    );
-            }
-            catch (Exception ex)
-            {
+            //OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
+            //TwilioClient.Init(_twilioOptions.AccountSid, _twilioOptions.AuthToken);
+            //try
+            //{
+            //    var message = MessageResource.Create(
+            //        body: "Order Placed on Bulky Book. Your Order ID:" + id,
+            //        from: new Twilio.Types.PhoneNumber(_twilioOptions.PhoneNumber),
+            //        to: new Twilio.Types.PhoneNumber(orderHeader.PhoneNumber)
+            //        );
+            //}
+            //catch (Exception ex)
+            //{
 
-            }
+            //}
 
             return View(id);
         }
